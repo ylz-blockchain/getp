@@ -24,6 +24,10 @@ export default {
   },
   mounted() {
     this.viewDialog = 0;
+    const queryType = this.$route.query.type;
+    if (queryType != undefined) {
+      this.roleIdentity = parseInt(queryType);
+    }
   },
   components: { login, registry, forgetPassword }
 };

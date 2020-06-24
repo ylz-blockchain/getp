@@ -1,15 +1,27 @@
 <template>
   <div class="supplier">
     <div>
-
+      <sideBar :id.sync="deviceId" />
     </div>
-    <div></div>
-    <div></div>
+    <div>
+      <supplierMian :id.sync="deviceId" />
+    </div>
   </div>
 </template>
 
 <script>
-export default {};
+import sideBar from "./components/sideBar";
+import supplierMian from "./components/supplierMian";
+
+export default {
+  name: "supplier",
+  components: { sideBar, supplierMian },
+  data() {
+    return {
+      deviceId: "0"
+    };
+  }
+};
 </script>
 
 <style>
@@ -17,6 +29,17 @@ export default {};
   background: #272632;
   position: relative;
   height: 100vh;
-  padding: 5%, 5%, 5%, 5%;
+  display: flex;
+  flex-direction: row;
+}
+
+.supplier > div:first-child {
+  width: 12%;
+  height: 100%;
+}
+
+.supplier > div:last-child {
+  width: 88%;
+  padding: 1% 1% 1% 1%;
 }
 </style>

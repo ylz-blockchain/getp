@@ -17,11 +17,11 @@ Vue.prototype.$echarts = echarts;
 Vue.use(ElementUI);
 
 // 全局路由
-const whiteList = ['/login'];// 不重定向白名单
+const whiteList = ['/login', '/'];// 不重定向白名单
 router.beforeEach((to, from, next) => {
   if (getToken()) { // 判断是否有token
     if (to.path === '/login') {
-      next({ path: '/' });
+      next({ path: '/index' });
     } else {
       if (store.getters.menus === undefined) {
         store.dispatch('GetUserInfoByToken').then(info => { // 拉取user_info
@@ -38,11 +38,11 @@ router.beforeEach((to, from, next) => {
                 flag = true;
               }
             });
-            
+
             if (flag) {
               next({ ...to });
             } else {
-              next({ path: '/' });
+              next({ path: '/index' });
             }
           })
         }).catch(() => {

@@ -294,12 +294,12 @@ export default {
   position: relative;
 }
 
-.is-check {
+.pay .is-check {
   border: 1px solid #00ff87;
   color: #00ff87;
 }
 
-.is-check > div:last-child {
+.pay .is-check > div:last-child {
   background: #00ff87 !important;
 }
 

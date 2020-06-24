@@ -7,7 +7,7 @@ module.exports = {
         port: 9527,
         proxy: {
             '^/jeecg-boot': {
-                target: 'http://192.168.0.102:8081',
+                target: 'http://192.168.0.132:8080',
                 changeOrigin: true
             }
         }

@@ -39,7 +39,7 @@
       </div>
 
       <!-- 钱包 -->
-      <div class="profile-wallet">
+      <div v-if="userInfo.roleType === 'consumer'" class="profile-wallet">
         <div>钱包</div>
         <div class="profile-wallet-balance">
           <div class="profile-content">
@@ -47,7 +47,9 @@
               <div>余额</div>
               <div class="profile-value">¥2000</div>
             </div>
-            <div class="profile-content-click"><span @click="handlePay">充值</span></div>
+            <div class="profile-content-click">
+              <span @click="handlePay">充值</span>
+            </div>
 
             <pay :visible.sync="payVisible" />
           </div>
@@ -75,12 +77,59 @@
               <div class="profile-wallet-balance-record-item">
                 <div>¥132</div>
                 <div>2020.06.01.18:32</div>
-                <div class="profile-content-click"><span @click="handleConsumeRecord">查看详情</span></div>
+                <div class="profile-content-click">
+                  <span @click="handleConsumeRecord">查看详情</span>
+                </div>
               </div>
 
-              <consume-record :visible.sync="recordVisible" />
+              <consume-record :visible.sync="consumeRecordVisible" />
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- 钱包 -->
+      <div v-if="userInfo.roleType === 'supplier'" class="profile-wallet">
+        <div>钱包</div>
+        <div class="profile-wallet-rate-item">
+          <div>总收益</div>
+          <div>100000积分</div>
+          <div>剩余30000积分</div>
+          <div class="profile-content-click"><span>提现</span></div>
+        </div>
+        <div class="profile-wallet-rate-item">
+          <div>收益详情</div>
+          <div>设备名称</div>
+          <div>运行时间</div>
+          <div>历史收益</div>
+        </div>
+        <div class="profile-wallet-rate-item">
+          <div></div>
+          <div>苹果X</div>
+          <div>23天</div>
+          <div>3000积分</div>
+        </div>
+        <div class="profile-wallet-rate-item">
+          <div></div>
+          <div>华为mat 30</div>
+          <div>43天</div>
+          <div>8000积分</div>
+        </div>
+        <div class="profile-wallet-rate-item">
+          <div></div>
+          <div>电脑类设备Win</div>
+          <div>12天</div>
+          <div>2000积分</div>
+        </div>
+        <div class="profile-wallet-rate-item">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div class="profile-content-click"><span @click="handleRateRecord">查看更多</span></div>
+        </div>
+
+        <div class="profile-wallet-rate-record">
+          <rate-record :visible.sync="rateRecordVisible" />
         </div>
       </div>
 
@@ -93,7 +142,9 @@
               <div>手机号</div>
               <div class="profile-value">13611112222</div>
             </div>
-            <div class="profile-content-click"><span @click="handleChangePassword">修改密码</span></div>
+            <div class="profile-content-click">
+              <span @click="handleChangePassword">修改密码</span>
+            </div>
           </div>
 
           <change-password :visible.sync="changePasswordVisible" />
@@ -112,16 +163,21 @@
 import coverButton from "@/components/button";
 import pay from "@/views/pay";
 import consumeRecord from "./components/consumeRecord";
+import rateRecord from "./components/rateRecord";
 import changePassword from "./components/changePassword";
+import { mapGetters } from "vuex";
 
 export default {
   name: "profile",
-  components: { coverButton, pay, consumeRecord, changePassword },
+  components: { coverButton, pay, consumeRecord, rateRecord, changePassword },
   props: {
     visible: {
       type: Boolean,
       default: false
     }
+  },
+  computed: {
+    ...mapGetters(["role"])
   },
   data() {
     return {
@@ -129,12 +185,17 @@ export default {
       direction: "rtl",
       isEdit: false,
       userInfo: {
-        username: "乌班鱼"
+        username: "乌班鱼",
+        roleType: "consumer"
       },
       payVisible: false,
-      recordVisible: false,
+      consumeRecordVisible: false,
+      rateRecordVisible: false,
       changePasswordVisible: false
     };
+  },
+  created() {
+    this.userInfo.roleType = this.role;
   },
   watch: {
     visible(newVal) {
@@ -168,7 +229,10 @@ export default {
       this.payVisible = true;
     },
     handleConsumeRecord() {
-      this.recordVisible = true;
+      this.consumeRecordVisible = true;
+    },
+    handleRateRecord() {
+      this.rateRecordVisible = true;
     },
     handleChangePassword() {
       this.changePasswordVisible = true;
@@ -320,11 +384,14 @@ export default {
 
 .profile-content-click {
   color: #00ff87;
-  cursor: pointer;
   width: 20%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
+
+.profile-content-click span {
+  cursor: pointer;
 }
 
 .profile-content-click > div {
@@ -337,6 +404,7 @@ export default {
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+/** consumer 部分 **/
 .profile-wallet-balance {
   display: flex;
   justify-content: space-between;
@@ -356,6 +424,42 @@ export default {
 .profile-wallet-balance-record-item > div {
   width: 50px;
   margin-bottom: 20px;
+}
+
+/** supplier 部分 **/
+.profile-wallet-rate-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  margin-top: 10px;
+  height: 30px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 12px;
+}
+
+.profile-wallet-rate-item > div:first-child,
+.profile-wallet-rate-item > div:nth-child(2) {
+  text-align: left;
+}
+
+.profile-wallet-rate-item > div:first-child,
+.profile-wallet-rate-item > div:last-child {
+  width: 20%;
+}
+
+.profile-wallet-rate-item > div:last-child,
+.profile-wallet-rate-item > div:nth-child(3) {
+  text-align: right;
+}
+
+.profile-wallet-rate-item > div:nth-child(2),
+.profile-wallet-rate-item > div:nth-child(3) {
+  width: 30%;
+}
+
+.profile-wallet-rate-record .el-dialog__body {
+  padding: 0px !important;
 }
 
 .profile-security {

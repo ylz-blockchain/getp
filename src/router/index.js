@@ -3,9 +3,14 @@ import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
 
-import index from '@/views/index';
+import index from '@/views/layout/index';
 
 export const constantRouterMap = [
+  {
+    path: '/',
+    name: 'index',
+    component: () => import('@/views/index')
+  },
   {
     path: '/login',
     name: 'login',
@@ -16,7 +21,7 @@ export const constantRouterMap = [
 // 运算方路由
 export const supplierRouterMap = [
   {
-    path: '/',
+    path: '/index',
     component: index,
     redirect: '/supplier',
     name: '运算方路由',
@@ -25,11 +30,6 @@ export const supplierRouterMap = [
         path: '/supplier',
         name: '首页',
         component: () => import('@/views/supplier/index')
-      },
-      {
-        path: '/supplier/projectManager',
-        name: '项目管理',
-        component: () => import('@/views/supplier/projectManager')
       }
     ]
   }
@@ -38,7 +38,7 @@ export const supplierRouterMap = [
 // 需求方路由
 export const consumerRouterMap = [
   {
-    path: '/',
+    path: '/index',
     component: index,
     redirect: '/consumer',
     name: '需求方路由',

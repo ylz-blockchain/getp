@@ -7,7 +7,7 @@
           <img src="@/assets/consumer_top_1.png" />
         </el-col>
         <el-col class="consumer-top-title-number" :span="16" :offset="2">
-          <div class="consumer-title">6</div>
+          <div class="consumer-title">{{ statisticsData.running }}</div>
           <div class="second-title">正在运行的项目</div>
         </el-col>
       </el-row>
@@ -16,7 +16,7 @@
           <img src="@/assets/consumer_top_2.png" />
         </el-col>
         <el-col class="consumer-top-title-number" :span="16" :offset="2">
-          <div class="consumer-title" style="color: #FFFFFF">17</div>
+          <div class="consumer-title" style="color: #FFFFFF">{{ statisticsData.completed }}</div>
           <div class="second-title">已经完成的项目</div>
         </el-col>
       </el-row>
@@ -25,7 +25,7 @@
           <img src="@/assets/consumer_top_3.png" />
         </el-col>
         <el-col class="consumer-top-title-number" :span="16" :offset="2">
-          <div class="consumer-title" style="color: #FFFFFF">2</div>
+          <div class="consumer-title" style="color: #FFFFFF">{{ statisticsData.stopped }}</div>
           <div class="second-title">已经停止的项目</div>
         </el-col>
       </el-row>
@@ -39,7 +39,7 @@
           <div></div>
         </div>
         <div class="consumer-main-balance-up">
-          <div>账户余额：¥10000元</div>
+          <div>账户余额：¥{{ statisticsData.balance }}元</div>
           <div>
             <el-button @click="handlePay">立即充值</el-button>
           </div>
@@ -50,10 +50,10 @@
       <div class="consumer-main-process">
         <div class="consumer-main-title">
           <div>总进度</div>
-          <div style="color: #00FF87">68%</div>
+          <div style="color: #00FF87">{{ statisticsData.totalProgress }}%</div>
         </div>
         <div>
-          <consumer-process :data="processData" />
+          <process-charts id="process" processColor="#00FF87" :data="statisticsData.totalProgress" />
         </div>
       </div>
     </div>
@@ -62,31 +62,50 @@
     <div class="consumer-buttom">
       <div class="consumer-buttom-title">计算资源占用</div>
       <div class="consumer-buttom-resource">
-        <consumer-resource :data="resourceData" />
+        <line-charts :data="statisticsData.resourceData" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import consumerProcess from "@/components/echarts/consumerProcess";
-import consumerResource from "@/components/echarts/consumerResource";
+import processCharts from "@/components/echarts/processCharts";
+import lineCharts from "@/components/echarts/lineCharts";
 import pay from "@/views/pay";
+import { overview } from "@/api/consumer/index";
 
 export default {
   name: "consumer",
   data() {
     return {
-      processData: 68,
-      resourceData: {
-        x: ["2020.05.29", "2020.05.30", "2020.05.31", "2020.06.01", "2020.06.02", "2020.06.03", "2020.06.04"],
-        y: [80, 60, 40, 60, 50, 90, 70]
+      statisticsData: {
+        balance: 0,
+        completed: 0,
+        running: 0,
+        stopped: 0,
+        totalProgress: 0,
+        resourceData: undefined
       },
       payVisible: false
     };
   },
-  components: { consumerProcess, consumerResource, pay },
+  components: { processCharts, lineCharts, pay },
+  created() {
+    this.getOverView();
+  },
   methods: {
+    getOverView() {
+      overview()
+        .then(res => {
+          const { balance, completed, running, stopped, totalProgress, x, y } = res;
+          this.statisticsData = { balance, completed, running, stopped, totalProgress };
+          this.statisticsData.resourceData = {
+            x: x,
+            y: y
+          };
+        })
+        .catch();
+    },
     handlePay() {
       this.payVisible = true;
     }

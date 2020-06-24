@@ -23,6 +23,15 @@
 
     <!-- 个人中心 -->
     <div class="navbar-private">
+      <div v-if="role === 'supplier'" class="navbar-private-supplier">
+        <span @click="handleDownload" style="cursor: pointer;">下载移动端</span>
+        <div v-if="download" class="navbar-private-supplier-download">
+          <div>扫描二维码下载移动端</div>
+          <div>
+            <img src="@/assets/pay_code.png" />
+          </div>
+        </div>
+      </div>
       <div style="color: rgba(255, 255, 255, 0.8)">个人中心</div>
       <div>
         <i @click="showProfile" style="cursor: pointer" class="iconfont iconicon_stroke_svg_user"></i>
@@ -39,11 +48,12 @@ export default {
   data() {
     return {
       indexPath: "/",
-      path: undefined
+      path: undefined,
+      download: false
     };
   },
   computed: {
-    ...mapGetters(["menus"])
+    ...mapGetters(["menus", "role"])
   },
   mounted() {
     this.indexPath = this.menus[0].children[0].path;
@@ -61,6 +71,9 @@ export default {
         this.handleRouter(this.indexPath);
         this.$router.push({ path: this.indexPath });
       }
+    },
+    handleDownload() {
+      this.download = this.download ? false : true;
     }
   }
 };
@@ -107,5 +120,51 @@ export default {
 
 .navbar-private div {
   margin-left: 12px;
+}
+
+.navbar-private-supplier {
+  color: #00ff87;
+  position: relative;
+}
+
+.navbar-private-supplier-download {
+  position: absolute;
+  display: flex;
+  right: 0px;
+  z-index: 9999;
+  width: 200px;
+  height: 230px;
+  top: 25px;
+  box-shadow: 0px 0px 4px 0 #000817;
+  font-size: 1.5vh;
+  font-family: Noto Sans SC;
+  font-weight: bold;
+  flex-direction: column;
+  background: #505264;
+  text-align: center;
+  margin-left: 0px !important;
+}
+
+.navbar-private-supplier-download > div {
+  margin-left: 0px;
+}
+
+.navbar-private-supplier-download > div:first-child {
+  height: 40px;
+  line-height: 40px;
+}
+
+.navbar-private-supplier-download > div:last-child {
+  border: 1px solid #00ff87;
+  padding: 5px 5px 5px 5px;
+  width: 125px;
+  margin: 30px;
+  margin-top: 20px;
+  height: 125px;
+}
+
+.navbar-private-supplier-download img {
+  width: 120px;
+  height: 120px;
 }
 </style>

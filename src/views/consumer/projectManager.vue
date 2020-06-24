@@ -35,11 +35,9 @@
       </div>
     </div>
 
-    <hr style="height: 3px; background-color: #3b3c4b; border: none; margin: 0px" />
-
     <!-- 表格 -->
     <div class="project-table">
-      <el-table :max-height="maxHeight" :data="projectRecord" style="width: 100%;">
+      <search-table :selectShow="false" :data="projectRecord">
         <el-table-column prop="projectName" label="项目名称"></el-table-column>
         <el-table-column prop="startTime" align="center" label="订单号"></el-table-column>
         <el-table-column prop="taskProcess" align="center" label="任务进度">
@@ -62,20 +60,7 @@
             ></el-button>
           </template>
         </el-table-column>
-      </el-table>
-
-      <div class="pagination-container">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="listQuery.pageNo"
-          :page-sizes="[10, 20, 30, 50]"
-          :page-size="listQuery.pageSize"
-          background
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
-        ></el-pagination>
-      </div>
+      </search-table>
     </div>
   </div>
 </template>
@@ -83,24 +68,19 @@
 <script>
 import coverButton from "@/components/button";
 import { message } from "@/utils/utils";
-import addProject from "./components/addProject"
+import addProject from "./components/addProject";
+import searchTable from "@/components/searchTable";
 
 export default {
   name: "project-manager",
-  components: { coverButton, addProject },
+  components: { coverButton, addProject, searchTable },
   data() {
     return {
       searchContent: undefined,
       listQuery: {
-        pageNo: 1,
-        pageSize: 10,
-        sortProp: undefined,
-        sortType: undefined,
         filterCheck: [0, 1, 2]
       },
       addProjectVisible: false,
-      maxHeight: 1080, // 表格高度
-      total: 50,
       projectRecord: [
         {
           projectName: "土地利用分析",
@@ -167,7 +147,6 @@ export default {
       }
     },
     filterOperation(row) {
-      // <el-button @click="handleOperation(scope.row)">下载结果</el-button>
       switch (row.taskStatus) {
         case 0:
           return "继续运算";
@@ -179,10 +158,6 @@ export default {
           return "";
       }
     }
-  },
-  mounted() {
-    let screenHeight = document.body.clientHeight;
-    this.maxHeight = screenHeight - 155;
   }
 };
 </script>
@@ -210,6 +185,7 @@ export default {
   justify-content: space-between;
   padding: 10px 10px 10px 10px;
   background: #3f4050;
+  z-index: 100;
 }
 
 .project-header > div {
@@ -227,6 +203,8 @@ export default {
   border: 1px solid #00ff87;
   height: 30px;
   line-height: 7px;
+  font-family: Noto Sans SC;
+  font-weight: 400;
   border-radius: 2px;
   background: #00ff87;
   color: #272632;
@@ -303,125 +281,19 @@ export default {
   margin-right: 10px;
 }
 
-.project-table .el-input__inner {
-  height: 28px;
-  color: rgba(255, 255, 255, 0.8);
-  background: rgba(39, 38, 50, 0.1);
-  font-size: 12px;
+.project-table {
+  position: absolute;
+  height: 100%;
   width: 100%;
-  border-radius: 2px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
-/** 表格样式 **/
-.project-table .el-table::before {
-  height: 0px;
+.project-table .table-main {
+  top: 52px;
 }
 
-.project-table .el-table__header-wrapper {
-  box-shadow: 0px 0px 4px 0 #000817;
-}
-
-.project-table .el-table th {
-  background: #3f4050;
-  color: #ffffff;
-}
-
-.project-table .el-table tr {
+.project-table .table-main .el-table tr {
   background: #272632;
-  color: #b0b1b6;
-  font-size: 12px;
-}
-
-.project-table .el-table td {
-  padding: 0px;
   height: 40px;
-  line-height: 40px;
-}
-
-.project-table .el-table td {
-  border-bottom: 1px solid #4c4d59;
-}
-
-.project-table .el-table th.is-leaf {
-  border-bottom: none;
-}
-
-.project-table .el-table--enable-row-hover .el-table__body tr:hover > td {
-  background-color: #3f4050 !important;
-}
-
-.project-table .el-pagination button,
-.el-pagination span:not([class*="suffix"]) {
-  color: #ffffff;
-}
-
-.project-table .pagination-container {
-  height: 40px;
-  display: flex;
-  align-items: center;
-  position: fixed;
-  bottom: 0px;
-  background: #505264;
-  width: 100%;
-}
-
-.project-table .el-pagination .el-input__suffix {
-  top: 0px;
-}
-
-.project-table .el-pagination button {
-  background: #3f4050;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-.project-table .el-pagination button:disabled {
-  background: #3f4050;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-.project-table .el-pager li.active {
-  color: #00ff87;
-  border: 1px solid #00ff87;
-}
-
-.project-table .el-pagination.is-background .el-pager li:not(.disabled).active {
-  background: #3f4050;
-  color: #00ff87;
-  border: 1px solid #00ff87;
-}
-
-.project-table
-  .el-pagination.is-background
-  .el-pager
-  li:not(.disabled).active:hover {
-  color: #00ff87 !important;
-}
-
-.project-table .el-pagination.is-background .el-pager li {
-  background: #3f4050;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-.project-table .el-pagination.is-background .el-pager li:hover {
-  color: #ffffff !important;
-}
-
-.project-table .el-pagination.is-background .btn-prev {
-  background: #3f4050;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #ffffff;
-}
-
-.project-table .el-pagination.is-background .btn-next {
-  background: #3f4050;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #ffffff;
-}
-
-.project-table .el-pagination__editor.el-input .el-input__inner:focus {
-  border: 1px solid #ffffff !important;
 }
 
 .project-table .el-progress.is-success .el-progress-bar__inner {

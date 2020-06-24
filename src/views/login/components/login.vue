@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       loginForm: {
-        phoneNumber: "13597680151", // 手机号
+        phoneNumber: "13597680154", // 手机号
         password: "135976", // 密码
         autoLogin: false // 自动登录
       },
@@ -112,7 +112,8 @@ export default {
       visible: false,
       loginTpye: 1, // 登录类型 0 运算放 1 需求方
       leftImgPath: demanderImg,
-      passwordType: "password"
+      passwordType: "password",
+      redirect: undefined
     };
   },
   watch: {
@@ -126,6 +127,12 @@ export default {
     role: function(newVal) {
       this.leftImgPath = newVal === 0 ? demanderImg : provideImg;
       this.loginTpye = newVal;
+    },
+    $route: {
+      handler: function(route) {
+        this.redirect = route.query && route.query.redirect
+      },
+      immediate: true
     }
   },
   mounted() {
@@ -160,7 +167,7 @@ export default {
           this.$store
             .dispatch("Login", param)
             .then(() => {
-              this.$router.push({ path: this.redirect || "/" });
+              this.$router.push({ path: this.redirect || "/index" });
             })
             .catch(() => {
               console.log("登录失败");

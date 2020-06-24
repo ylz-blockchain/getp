@@ -1,17 +1,30 @@
 <template>
-  <div id="process" style="width: 100%; height: 100%;" />
+  <div :id="id" style="width: 100%; height: 100%;" />
 </template>
 
 <script>
 import { nowSize } from "@/utils/utils";
 
 export default {
-  name: "consumer-process",
+  name: "process-charts",
   props: {
+    id: {
+      type: String,
+      required: true
+    },
     data: {
       type: Number,
-      required: true,
-      default: 100
+      required: false
+    },
+    processColor: {
+      type: String,
+      required: true
+    }
+  },
+  watch: {
+    data(newVal) {
+      this.setOption();
+      this.initChart();
     }
   },
   data() {
@@ -19,9 +32,9 @@ export default {
       chartsFontSize: 36,
       option: {
         title: {
-          text: "75%",
+          text: "0%",
           textStyle: {
-            color: "#00FF87",
+            color: "#FFFFFF",
             fontSize: this.chartsFontSize
           },
           left: "center",
@@ -69,11 +82,11 @@ export default {
             type: "bar",
             data: [
               {
-                name: "作文得分",
-                value: this.data,
+                name: "进度",
+                value: 0,
                 itemStyle: {
                   normal: {
-                    color: "#00FF87"
+                    color: "#FFFFFF"
                   }
                 }
               }
@@ -105,21 +118,34 @@ export default {
           }
         ]
       }
-    }
+    };
   },
   mounted() {
-    this.initChart()
+    this.setOption();
+    this.initChart();
   },
   beforeCreate() {
     this.chartsFontSize = nowSize(36);
   },
   methods: {
+    setOption() {
+      this.option.title.textStyle.color = this.processColor;
+      this.option.series[0].data[0].value =
+        this.data != undefined ? this.data : 0;
+      this.option.series[0].data[0].itemStyle.normal.color = this.processColor;
+      this.option.title.text = this.data != undefined ? this.data + "%" : "--";
+    },
     initChart() {
-      this.chart = this.$echarts.init(document.getElementById("process"));
+      this.chart = this.$echarts.init(document.getElementById(this.id));
       this.chart.setOption(this.option);
+
+      let _this = this;
+      window.addEventListener("resize", () => {
+        _this.chart.resize();
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped>
