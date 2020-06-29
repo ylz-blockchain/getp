@@ -23,6 +23,9 @@ const user = {
     },
     SET_ROLE: (state, role) => {
       state.role = role;
+    },
+    SET_USER: (state, user) => {
+      state.user = user;
     }
   },
 
@@ -52,6 +55,7 @@ const user = {
       return new Promise((resolve, reject) => {
         queryUserByToken().then(response => {
           commit('SET_ROLE', response.roleCode);
+          commit('SET_USER', response.realname);
           resolve(response);
         }).catch(error => {
           reject(error);

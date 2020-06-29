@@ -14,7 +14,7 @@
         <div class="profile-basic-name">
           <div class="profile-content">
             <div class="profile-content-title">
-              <div>用户名</div>
+              <div>昵称</div>
               <div class="profile-value">
                 <label v-if="!isEdit">{{ userInfo.username }}</label>
                 <div v-if="isEdit" class="profile-value-name">
@@ -95,7 +95,9 @@
           <div>总收益</div>
           <div>100000积分</div>
           <div>剩余30000积分</div>
-          <div class="profile-content-click"><span>提现</span></div>
+          <div class="profile-content-click">
+            <span>提现</span>
+          </div>
         </div>
         <div class="profile-wallet-rate-item">
           <div>收益详情</div>
@@ -125,7 +127,9 @@
           <div></div>
           <div></div>
           <div></div>
-          <div class="profile-content-click"><span @click="handleRateRecord">查看更多</span></div>
+          <div class="profile-content-click">
+            <span @click="handleRateRecord">查看更多</span>
+          </div>
         </div>
 
         <div class="profile-wallet-rate-record">
@@ -165,7 +169,9 @@ import pay from "@/views/pay";
 import consumeRecord from "./components/consumeRecord";
 import rateRecord from "./components/rateRecord";
 import changePassword from "./components/changePassword";
+import { message } from "@/utils/utils";
 import { mapGetters } from "vuex";
+import { changeUserInfo } from "@/api/admin/user";
 
 export default {
   name: "profile",
@@ -177,7 +183,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["role"])
+    ...mapGetters(["user", "role"])
   },
   data() {
     return {
@@ -196,6 +202,7 @@ export default {
   },
   created() {
     this.userInfo.roleType = this.role;
+    this.userInfo.username = this.user;
   },
   watch: {
     visible(newVal) {
@@ -219,8 +226,15 @@ export default {
       this.userInfo.username = "";
     },
     handleSave() {
-      // 编辑完成
-      this.isEdit = false;
+      let param = {
+        realname: this.userInfo.username
+      }
+      changeUserInfo(param)
+        .then(res => {
+          message("修改用户名成功", "success");
+          this.isEdit = false;
+        })
+        .catch();
     },
     handleClear() {
       this.isEdit = false;

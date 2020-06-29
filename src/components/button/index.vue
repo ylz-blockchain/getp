@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-button :disabled="isDisable" type="primary"><slot>按钮</slot></el-button>
-    <div class="cover"></div>
+    <el-button @click="handleClick" type="primary"><slot>按钮</slot></el-button>
+    <div :style="{display: cover}" class="cover"></div>
   </div>
 </template>
 
@@ -9,18 +9,14 @@
 export default {
   data() {
     return {
-      isDisable: false
+      cover: 'none'
     }
   },
-  props: {
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  watch: {
-    disabled(newVal) {
-      this.isDisable = newVal;
+  methods: {
+    handleClick() {
+      if (this.cover == 'none') {
+        this.cover = 'block';
+      }
     }
   }
 }
@@ -28,7 +24,6 @@ export default {
 
 <style scoped>
 .cover {
-  display: none;
   position: absolute;
   top: 0%;
   left: 0%;
@@ -40,9 +35,5 @@ export default {
   opacity: 0.1;
   cursor: pointer;
   filter: alpha(opacity=10);
-}
-
-.el-button--primary:focus+.cover {
-  display: block;
 }
 </style>

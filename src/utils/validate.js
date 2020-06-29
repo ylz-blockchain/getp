@@ -19,3 +19,16 @@ export let validatePass = (rule, value, callback) => {
     callback()
   }
 };
+
+export let validateEmail = (rule, value, callback) => {
+  if (value == undefined || value === '') {
+    callback(new Error("邮箱号不能为空"));
+    return;
+  }
+
+  var emailVaildate = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+  if (!emailVaildate.test(value)) {
+    callback(new Error('邮箱格式不正确'));
+  }
+  callback();
+}

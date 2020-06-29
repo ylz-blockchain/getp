@@ -7,7 +7,7 @@
         <div class="project-header-add">
           <cover-button @click.native="handleAddProject">新增项目</cover-button>
 
-          <add-project :visible.sync="addProjectVisible" />
+          <add-project :visible.sync="addProjectVisible" @handleSuccess="addProjectSuccess" />
         </div>
         <div class="project-header-search">
           <el-input v-model="searchContent" placeholder="请输入搜索内容"></el-input>
@@ -39,7 +39,7 @@
     <div class="project-table">
       <search-table :selectShow="false" :data="projectRecord">
         <el-table-column prop="projectName" label="项目名称"></el-table-column>
-        <el-table-column prop="startTime" align="center" label="订单号"></el-table-column>
+        <el-table-column prop="startTime" align="center" label="起始时间"></el-table-column>
         <el-table-column prop="taskProcess" align="center" label="任务进度">
           <template slot-scope="scope">
             <el-progress :percentage="scope.row.taskProcess" status="success"></el-progress>
@@ -62,6 +62,8 @@
         </el-table-column>
       </search-table>
     </div>
+
+    <div :style="{opacity: addMessageVisible}" class="project-add-message">项目创建成功，等待审核...</div>
   </div>
 </template>
 
@@ -81,6 +83,7 @@ export default {
         filterCheck: [0, 1, 2]
       },
       addProjectVisible: false,
+      addMessageVisible: 0,
       projectRecord: [
         {
           projectName: "土地利用分析",
@@ -121,6 +124,13 @@ export default {
     handleOperation() {},
     handleAddProject() {
       this.addProjectVisible = true;
+    },
+    addProjectSuccess() {
+      this.addMessageVisible = 1;
+      let _this = this;
+      setTimeout(function() {
+        _this.addMessageVisible = 0;
+      }, 3000);
     },
     filterStatus(val) {
       switch (val) {
@@ -340,5 +350,23 @@ export default {
 .project-table .success {
   color: #00ff87;
   border: 1px solid #00ff87;
+}
+
+.project-add-message {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 5.5%;
+  margin: 0 auto;
+  width: 220px;
+  height: 55px;
+  line-height: 55px;
+  text-align: center;
+  font-size: 13px;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid #00ff87;
+  z-index: 9999;
+  transition: opacity 1s;
 }
 </style>
