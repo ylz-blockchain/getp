@@ -12,11 +12,25 @@
       <div class="supplier-main-overview-history">
         <div>历史任务</div>
         <div class="supplier-main-overview-history-table">
-          <search-table :data="historyTask">
-            <el-table-column prop="projectName" label="项目名称"></el-table-column>
-            <el-table-column prop="orderNo" label="订单号"></el-table-column>
-            <el-table-column prop="consumeBalance" label="消费金额"></el-table-column>
-            <el-table-column prop="buyTime" label="购买时间"></el-table-column>
+          <search-table
+            :total.sync="total"
+            @handleSearch="handleSearch(arguments)"
+            @handleSizeChange="handleSizeChange(arguments)"
+            @handleCurrentChange="handleCurrentChange(arguments)"
+            :data.sync="historyTask"
+          >
+            <el-table-column prop="name" label="项目名称"></el-table-column>
+            <el-table-column prop="total" align="center" label="产生积分">
+              <template slot-scope="scope">{{ scope.row.total }}分</template>
+            </el-table-column>
+            <el-table-column prop="progress" align="center" label="任务状态">
+              <template slot-scope="scope">
+                <span v-html="filterStatus(scope.row.progress)"></span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="diffDays" align="center" label="运行时间">
+              <template slot-scope="scope">{{ scope.row.diffDays }}天</template>
+            </el-table-column>
           </search-table>
         </div>
       </div>
@@ -56,7 +70,9 @@
         <div class="supplier-main-device-main-item">
           <div>
             <span>CPU使用率</span>
-            <span :style="'color:' + cpuStyle + ';'">{{ deviceInfo.cpuProcess != undefined ? deviceInfo.cpuProcess + '%' : '--' }}</span>
+            <span
+              :style="'color:' + cpuStyle + ';'"
+            >{{ deviceInfo.cpuProcess != undefined ? deviceInfo.cpuProcess + '%' : '--' }}</span>
           </div>
           <div>
             <process-charts id="cpuProcess" :processColor="cpuStyle" :data="deviceInfo.cpuProcess" />
@@ -65,7 +81,9 @@
         <div class="supplier-main-device-main-item">
           <div>
             <span>存储空间使用率</span>
-            <span :style="'color:' + storeStyle + ';'">{{ deviceInfo.storeProcess != undefined ? deviceInfo.storeProcess + '%' : '--' }}</span>
+            <span
+              :style="'color:' + storeStyle + ';'"
+            >{{ deviceInfo.storeProcess != undefined ? deviceInfo.storeProcess + '%' : '--' }}</span>
           </div>
           <div>
             <process-charts
@@ -78,7 +96,9 @@
         <div class="supplier-main-device-main-item">
           <div>
             <span>带宽使用率</span>
-            <span :style="'color:' + flowStyle + ';'">{{ deviceInfo.flowProcess != undefined ? deviceInfo.flowProcess + '%' : '--' }}</span>
+            <span
+              :style="'color:' + flowStyle + ';'"
+            >{{ deviceInfo.flowProcess != undefined ? deviceInfo.flowProcess + '%' : '--' }}</span>
           </div>
           <div>
             <process-charts
@@ -105,6 +125,7 @@ import lineCharts from "@/components/echarts/lineCharts";
 import deviceLineCharts from "@/components/echarts/deviceLineCharts";
 import searchTable from "@/components/searchTable";
 import coverButton from "@/components/button";
+import { overview, tasks, nodeDetail } from "@/api/supplier/index";
 
 export default {
   name: "supplier-main",
@@ -124,17 +145,7 @@ export default {
   watch: {
     id(newVal) {
       this.deviceInfo.id = newVal;
-      this.tests.forEach(item => {
-        if (this.deviceInfo.id === item.id) {
-          this.deviceInfo.name = item.name;
-          this.deviceInfo.icon = item.icon;
-          this.deviceInfo.status = item.status;
-          this.deviceInfo.score = item.score;
-          this.deviceInfo.cpuProcess = item.cpuProcess;
-          this.deviceInfo.storeProcess = item.storeProcess;
-          this.deviceInfo.flowProcess = item.flowProcess;
-        }
-      });
+      this.getNodeDetail();
     }
   },
   data() {
@@ -145,151 +156,32 @@ export default {
         icon: "",
         status: 0,
         score: "",
-        cpuProcess: 0,
-        storeProcess: 0,
-        flowProcess: 0,
+        cpuProcess: undefined,
+        storeProcess: undefined,
+        flowProcess: undefined,
         runData: {
           cpu: [80, 60, 40, 60, 50, 90, 40, 80, 60, 40, 60, 50, 90],
           store: [12, 32, 20, 43, 50, 34, 30, 42, 60, 40, 61, 50, 60],
           flow: [40, 60, 60, 32, 20, 61, 70, 89, 67, 74, 42, 42, 42]
         }
       },
+      listQuery: {
+        pageNo: 1,
+        pageSize: 10
+      },
+      total: undefined,
+      searchContent: undefined,
       cpuStyle: "#00FF87",
       storeStyle: "#6F86FF",
       flowStyle: "#00DBE8",
-      resourceData: {
-        x: [
-          "2020.05.29",
-          "2020.05.30",
-          "2020.05.31",
-          "2020.06.01",
-          "2020.06.02",
-          "2020.06.03",
-          "2020.06.04"
-        ],
-        y: [80, 60, 40, 60, 50, 90, 70]
-      },
-      tests: [
-        {
-          id: "1",
-          icon: "iconfont iconicon_stroke_svg_phone",
-          name: "小米8",
-          status: 0,
-          score: 100,
-          cpuProcess: 12,
-          storeProcess: 56,
-          flowProcess: 68
-        },
-        {
-          id: "2",
-          icon: "iconfont iconicon_stroke_svg_phone",
-          name: "苹果X",
-          status: 1,
-          score: 200,
-          cpuProcess: undefined,
-          storeProcess: undefined,
-          flowProcess: undefined
-        },
-        {
-          id: "3",
-          icon: "iconfont iconicon_stroke_svg_phone",
-          name: "华为mat 30",
-          status: 0,
-          score: 300,
-          cpuProcess: 62,
-          storeProcess: 50,
-          flowProcess: 88
-        },
-        {
-          id: "4",
-          icon: "iconfont iconicon_stroke_svg_pc",
-          name: "电脑类设备Win",
-          status: 1,
-          score: 400,
-          cpuProcess: undefined,
-          storeProcess: undefined,
-          flowProcess: undefined
-        },
-        {
-          id: "5",
-          icon: "iconfont iconicon_stroke_svg_devide",
-          name: "其他类设备矿机",
-          status: 2,
-          score: 500,
-          cpuProcess: undefined,
-          storeProcess: undefined,
-          flowProcess: undefined
-        }
-      ],
-      historyTask: [
-        {
-          projectName: "土地利用分析",
-          orderNo: "34535296791023120235234",
-          consumeBalance: "¥128",
-          buyTime: "2020.06.01.18:32"
-        },
-        {
-          projectName: "土地利用分析",
-          orderNo: "34535296791023120235234",
-          consumeBalance: "¥76",
-          buyTime: "2020.06.01.18:32"
-        },
-        {
-          projectName: "深圳南山区车流量统计与分析",
-          orderNo: "34535296791023120235234",
-          consumeBalance: "¥76",
-          buyTime: "2020.06.01.18:32"
-        },
-        {
-          projectName: "湖南省辣椒消耗量评估",
-          orderNo: "34535296791023120235234",
-          consumeBalance: "¥245",
-          buyTime: "2020.06.01.18:32"
-        },
-        {
-          projectName: "湖南省辣椒消耗量评估",
-          orderNo: "34535296791023120235234",
-          consumeBalance: "¥245",
-          buyTime: "2020.06.01.18:32"
-        },
-        {
-          projectName: "湖南省辣椒消耗量评估",
-          orderNo: "34535296791023120235234",
-          consumeBalance: "¥245",
-          buyTime: "2020.06.01.18:32"
-        },
-        {
-          projectName: "湖南省辣椒消耗量评估",
-          orderNo: "34535296791023120235234",
-          consumeBalance: "¥245",
-          buyTime: "2020.06.01.18:32"
-        },
-        {
-          projectName: "湖南省辣椒消耗量评估",
-          orderNo: "34535296791023120235234",
-          consumeBalance: "¥245",
-          buyTime: "2020.06.01.18:32"
-        },
-        {
-          projectName: "湖南省辣椒消耗量评估",
-          orderNo: "34535296791023120235234",
-          consumeBalance: "¥245",
-          buyTime: "2020.06.01.18:32"
-        },
-        {
-          projectName: "全球海平面近十年变化分析",
-          orderNo: "34535296791023120235234",
-          consumeBalance: "¥542",
-          buyTime: "2020.06.01.18:32"
-        },
-        {
-          projectName: "北京市风沙治理近二十年效果分析与检测",
-          orderNo: "34535296791023120235234",
-          consumeBalance: "¥327",
-          buyTime: "2020.06.01.18:32"
-        }
-      ]
+      resourceData: undefined,
+      tests: [],
+      historyTask: []
     };
+  },
+  created() {
+    this.getOverview();
+    this.getRecords();
   },
   methods: {
     filterTitleStyle(status) {
@@ -303,6 +195,91 @@ export default {
         default:
           return "";
       }
+    },
+    filterStatus(val) {
+      // 执行进度 -> 0: 待执行, 1: 执行中, 2: 已完成, 3: 已取消
+      switch (val) {
+        case 0:
+          return "<span style='color: #FD852D'>任务挂起</span>";
+        case 1:
+          return "<span style='color: #00FF87'>运行中</span>";
+        case 2:
+          return "<span style='color: rgba(255, 255, 255, 0.8)'>已完成</span>";
+        default:
+          return "";
+      }
+    },
+    filterNodeType(val) {
+      switch(val) {
+        case 0:
+          return "iconfont iconicon_stroke_svg_pc";
+        case 1:
+          return "iconfont iconicon_stroke_svg_phone";
+        case 2:
+          return "iconfont iconicon_stroke_svg_phone";
+        case 3:
+          return "iconfont iconicon_stroke_svg_devide";
+        default:
+          return "iconfont iconicon_stroke_svg_devide";
+      }
+    },
+    getOverview() {
+      overview()
+        .then(res => {
+          const integrals = res.integrals;
+          let x = [];
+          let y = [];
+
+          integrals.forEach(item => {
+            x.push(item.createTime);
+            y.push(item.total);
+          });
+          this.resourceData = {
+            x: x,
+            y: y
+          };
+        })
+        .catch();
+    },
+    getRecords() {
+      let param = {
+        name: this.searchContent,
+        pageNo: this.listQuery.pageNo,
+        pageSize: this.listQuery.pageSize
+      };
+      tasks(param)
+        .then(res => {
+          this.historyTask = res.nodeOverview;
+          this.total = res.total;
+        })
+        .catch();
+    },
+    getNodeDetail() {
+      nodeDetail({ uniqueId: this.deviceInfo.id })
+        .then(res => {
+          const { name, state, cpuUsage, diskUsed, memUsed, currentIntegral, bandwidthUsed, type } = res;
+          this.deviceInfo.name = name;
+          this.deviceInfo.status = state;
+          this.deviceInfo.score = currentIntegral;
+          this.deviceInfo.cpuProcess = cpuUsage;
+          this.deviceInfo.storeProcess = diskUsed;
+          this.deviceInfo.flowProcess = bandwidthUsed;
+          this.deviceInfo.icon = this.filterNodeType(type)
+        })
+        .catch();
+    },
+    handleSearch(param) {
+      this.listQuery = param[0];
+      this.searchContent = param[1];
+      this.getRecords();
+    },
+    handleSizeChange(param) {
+      this.listQuery = param[0];
+      this.getRecords();
+    },
+    handleCurrentChange(param) {
+      this.listQuery = param[0];
+      this.getRecords();
     }
   }
 };

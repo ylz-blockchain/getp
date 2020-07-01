@@ -9,10 +9,18 @@
     width="60%"
   >
     <div class="rate-record">
-      <search-table :data="rateRecord">
-        <el-table-column prop="deviceName" label="设备名称"></el-table-column>
-        <el-table-column prop="historyRate" label="历史收益"></el-table-column>
-        <el-table-column prop="runTime" label="运行时间"></el-table-column>
+      <search-table
+        :total.sync="total"
+        @handleSearch="handleSearch(arguments)"
+        @handleSizeChange="handleSizeChange(arguments)"
+        @handleCurrentChange="handleCurrentChange(arguments)"
+        :data.sync="rateRecord"
+      >
+        <el-table-column prop="name" label="设备名称"></el-table-column>
+        <el-table-column prop="total" label="历史收益"></el-table-column>
+        <el-table-column prop="diffDays" label="运行时间">
+          <template slot-scope="scope">{{ scope.row.diffDays }}天</template>
+        </el-table-column>
       </search-table>
     </div>
   </el-dialog>
@@ -21,6 +29,7 @@
 <script>
 import { message } from "@/utils/utils";
 import searchTable from "@/components/searchTable";
+import { integralHistory } from "@/api/supplier/index";
 
 export default {
   name: "rate-record",
@@ -34,38 +43,13 @@ export default {
   data() {
     return {
       recordVisible: false,
-      rateRecord: [
-        {
-          deviceName: "手机类设备小米8",
-          historyRate: "3000积分",
-          runTime: "23天"
-        },
-        {
-          deviceName: "苹果X",
-          historyRate: "8000积分",
-          runTime: "43天"
-        },
-        {
-          deviceName: "华为mat 30",
-          historyRate: "2000积分",
-          runTime: "12天"
-        },
-        {
-          deviceName: "华为mat 30",
-          historyRate: "2000积分",
-          runTime: "12天"
-        },
-        {
-          deviceName: "华为mat 30",
-          historyRate: "2000积分",
-          runTime: "12天"
-        },
-        {
-          deviceName: "Windo2",
-          historyRate: "23000积分",
-          runTime: "43天"
-        }
-      ]
+      listQuery: {
+        pageNo: 1,
+        pageSize: 10
+      },
+      total: undefined,
+      searchContent: undefined,
+      rateRecord: []
     };
   },
   watch: {
@@ -73,7 +57,36 @@ export default {
       this.recordVisible = newVal;
     }
   },
+  created() {
+    this.getRecords();
+  },
   methods: {
+    getRecords() {
+      let param = {
+        name: this.searchContent,
+        pageNo: this.listQuery.pageNo,
+        pageSize: this.listQuery.pageSize
+      };
+      integralHistory(param)
+        .then(res => {
+          this.rateRecord = res.historyRecords;
+          this.total = res.total;
+        })
+        .catch();
+    },
+    handleSearch(param) {
+      this.listQuery = param[0];
+      this.searchContent = param[1];
+      this.getRecords();
+    },
+    handleSizeChange(param) {
+      this.listQuery = param[0];
+      this.getRecords();
+    },
+    handleCurrentChange(param) {
+      this.listQuery = param[0];
+      this.getRecords();
+    },
     handleClose() {
       this.recordVisible = false;
       this.$emit("update:visible", false);

@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       loginForm: {
-        phoneNumber: "13597680154", // 手机号
+        phoneNumber: "13597680155", // 手机号
         password: "135976", // 密码
         autoLogin: false // 自动登录
       },
@@ -206,6 +206,10 @@ export default {
   box-shadow: 0px 0px 4px 0 #000817;
   display: flex;
   justify-content: space-between;
+}
+
+.content-login ::-webkit-input-safebox-button {
+  display: none;
 }
 
 .content-login .content-top {

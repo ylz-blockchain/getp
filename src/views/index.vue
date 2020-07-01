@@ -164,6 +164,291 @@ export default {
           name: "土地利用分析"
         },
         {
+          type: 1, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "新冠病毒蛋白质结构预测"
+        },
+        {
+          type: 0, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "深圳市土地利用规划预测"
+        },
+        {
+          type: 1, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "2021年深圳房价预测"
+        },
+        {
+          type: 0, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "北京市雾霾治理变化建模"
+        },
+        {
+          type: 2, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "湖南省辣椒消耗量评估"
+        },
+        {
+          type: 0, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "无线电信号搜寻地外文明"
+        },
+        {
+          type: 1, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "宝安中心人流分析预测"
+        },
+        {
+          type: 0, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "全球海岸线十年变化建模"
+        },
+        {
+          type: 2, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "人类线粒体DNA分析"
+        },
+        {
+          type: 1, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "证明完美长方体"
+        },
+        {
+          type: 0, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "银河系三维建模"
+        },
+        {
+          type: 1, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "粒子加速器模拟"
+        },
+        {
+          type: 0, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "全原子的分子动力学模拟"
+        },
+        {
+          type: 1, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "寻找旋转中子星物理信号"
+        },
+        {
+          type: 0, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "证明考拉兹猜想"
+        },
+        {
+          type: 1, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "气候模型中的近似处理"
+        },
+        {
+          type: 1, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "2021年深圳房价预测"
+        },
+        {
+          type: 0, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "全原子的分子动力学模拟"
+        },
+        {
+          type: 1, // 0 hot 1 up 2 down
+          liStyle: {
+            background:
+              "linear-gradient(to left,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#424453"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "寻找旋转中子星物理信号"
+        },
+        {
           type: 0, // 0 hot 1 up 2 down
           liStyle: {
             background:
@@ -224,6 +509,306 @@ export default {
             opacity: "1.0"
           },
           name: "Terri Terri"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "张三"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "李四"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "王五"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "张学友"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "陈奕迅"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "王菲"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "吕海峰"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "程序员"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "全栈"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "网站一套解决方案"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "项目流水线"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "罗坤龙"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "汪洋"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "锄大地"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "何何何"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "阿峰"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "Ethan"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "章琼锋"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "赵六"
+        },
+        {
+          icon: require("@/assets/icon_stroke_svg_medal4.png"),
+          liStyle: {
+            background:
+              "linear-gradient(to right,rgba(80, 82, 100, 0),rgba(80, 82, 100, 1))",
+            color: "rgba(255, 255, 255, 0.9)"
+          },
+          divStyle: {
+            background: "#414351"
+          },
+          imgStyle: {
+            opacity: "1.0"
+          },
+          name: "钱七"
         }
       ]
     };
@@ -375,6 +960,9 @@ export default {
             item.icon = defalutConsumerIcon;
             break;
         }
+        if (item.name.length > 8) {
+          item.name = item.name.substring(0, 8) + "...";
+        }
       });
 
       for (let i = 0; i < 30; i++) {
@@ -391,9 +979,15 @@ export default {
           imgStyle: {
             opacity: "1.0"
           },
-          name: "test"
+          name: "测试"
         });
       }
+
+      this.supplierUsers.forEach(item => {
+        if (item.name.length > 8) {
+          item.name = item.name.substring(0, 8) + "...";
+        }
+      });
     },
     handleLogin(type) {
       this.$router.push({ path: "/login", query: { type: type } });
@@ -573,11 +1167,11 @@ export default {
 }
 
 .index-left .index-list-item > div {
-  margin-right: 10%;
+  margin-right: 5%;
 }
 
 .index-right .index-list-item > div {
-  margin-left: 10%;
+  margin-left: 5%;
 }
 
 .index-right .index-list-item {

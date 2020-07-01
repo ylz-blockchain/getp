@@ -93,8 +93,8 @@
         <div>钱包</div>
         <div class="profile-wallet-rate-item">
           <div>总收益</div>
-          <div>100000积分</div>
-          <div>剩余30000积分</div>
+          <div>{{ userInfo.total }}积分</div>
+          <div>剩余{{ userInfo.current }}积分</div>
           <div class="profile-content-click">
             <span>提现</span>
           </div>
@@ -105,23 +105,11 @@
           <div>运行时间</div>
           <div>历史收益</div>
         </div>
-        <div class="profile-wallet-rate-item">
+        <div v-for="( item, index ) in userInfo.rateRecords" :key="index" class="profile-wallet-rate-item">
           <div></div>
-          <div>苹果X</div>
-          <div>23天</div>
-          <div>3000积分</div>
-        </div>
-        <div class="profile-wallet-rate-item">
-          <div></div>
-          <div>华为mat 30</div>
-          <div>43天</div>
-          <div>8000积分</div>
-        </div>
-        <div class="profile-wallet-rate-item">
-          <div></div>
-          <div>电脑类设备Win</div>
-          <div>12天</div>
-          <div>2000积分</div>
+          <div>{{ item.name }}</div>
+          <div>{{ item.diffDays }}天</div>
+          <div>{{ item.total }}积分</div>
         </div>
         <div class="profile-wallet-rate-item">
           <div></div>
@@ -144,7 +132,7 @@
           <div class="profile-content">
             <div class="profile-content-title">
               <div>手机号</div>
-              <div class="profile-value">13611112222</div>
+              <div class="profile-value">{{ userInfo.phone }}</div>
             </div>
             <div class="profile-content-click">
               <span @click="handleChangePassword">修改密码</span>
@@ -172,6 +160,7 @@ import changePassword from "./components/changePassword";
 import { message } from "@/utils/utils";
 import { mapGetters } from "vuex";
 import { changeUserInfo } from "@/api/admin/user";
+import { supplierCenter } from "@/api/supplier/index";
 
 export default {
   name: "profile",
@@ -192,7 +181,11 @@ export default {
       isEdit: false,
       userInfo: {
         username: "乌班鱼",
-        roleType: "consumer"
+        total: 0,
+        current: 0,
+        roleType: "consumer",
+        phone: '',
+        rateRecords: []
       },
       payVisible: false,
       consumeRecordVisible: false,
@@ -203,6 +196,10 @@ export default {
   created() {
     this.userInfo.roleType = this.role;
     this.userInfo.username = this.user;
+    if (this.userInfo.roleType == "consumer") {
+    } else {
+      this.getSupplierInfo();
+    }
   },
   watch: {
     visible(newVal) {
@@ -210,6 +207,17 @@ export default {
     }
   },
   methods: {
+    getSupplierInfo() {
+      supplierCenter()
+        .then(res => {
+          const { phone, total, current, historyRecords } = res;
+          this.userInfo.total = total;
+          this.userInfo.phone = phone;
+          this.userInfo.current = current;
+          this.userInfo.rateRecords = historyRecords;
+        })
+        .catch();
+    },
     handleClose() {
       this.drawer = false;
       this.$emit("update:visible", false);
@@ -228,7 +236,7 @@ export default {
     handleSave() {
       let param = {
         realname: this.userInfo.username
-      }
+      };
       changeUserInfo(param)
         .then(res => {
           message("修改用户名成功", "success");

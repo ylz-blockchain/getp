@@ -32,6 +32,7 @@
 
 <script>
 import addProject from "./addProject";
+import { nodes } from "@/api/supplier/index";
 
 export default {
   name: "side-bar",
@@ -52,44 +53,12 @@ export default {
           name: "概览",
           choose: true,
           suffixIcon: ""
-        },
-        {
-          id: "1",
-          prefixIcon: "iconfont iconicon_stroke_svg_phone",
-          name: "小米8",
-          choose: false,
-          suffixIcon: "iconfont iconicon_stroke_svg_run"
-        },
-        {
-          id: "2",
-          prefixIcon: "iconfont iconicon_stroke_svg_phone",
-          name: "苹果X",
-          choose: false,
-          suffixIcon: "iconfont iconicon_stroke_svg_free"
-        },
-        {
-          id: "3",
-          prefixIcon: "iconfont iconicon_stroke_svg_phone",
-          name: "华为mat 30",
-          choose: false,
-          suffixIcon: "iconfont iconicon_stroke_svg_run"
-        },
-        {
-          id: "4",
-          prefixIcon: "iconfont iconicon_stroke_svg_pc",
-          name: "电脑类设备Win",
-          choose: false,
-          suffixIcon: "iconfont iconicon_stroke_svg_free"
-        },
-        {
-          id: "5",
-          prefixIcon: "iconfont iconicon_stroke_svg_devide",
-          name: "其他类设备矿机",
-          choose: false,
-          suffixIcon: "iconfont iconicon_stroke_svg_error"
         }
       ]
     };
+  },
+  created() {
+    this.getNodes();
   },
   methods: {
     handleChooseMneu(index) {
@@ -104,6 +73,48 @@ export default {
     },
     handleAdd() {
       this.addVisible = true;
+    },
+    filterNodeType(val) {
+      switch(val) {
+        case 0:
+          return "iconfont iconicon_stroke_svg_pc";
+        case 1:
+          return "iconfont iconicon_stroke_svg_phone";
+        case 2:
+          return "iconfont iconicon_stroke_svg_phone";
+        case 3:
+          return "iconfont iconicon_stroke_svg_devide";
+        default:
+          return "iconfont iconicon_stroke_svg_devide";
+      }
+    },
+    filterNodeStatus(val) { // 节点状态 -> 0: 空闲中, 1: 运行中, 2: 已停止
+      switch(val) {
+        case 0:
+          return "iconfont iconicon_stroke_svg_free";
+        case 1:
+          return "iconfont iconicon_stroke_svg_run";
+        case 2:
+          return "iconfont iconicon_stroke_svg_error";
+        default:
+          return "iconfont iconicon_stroke_svg_error";
+      }
+    },
+    getNodes() {
+      nodes()
+        .then(res => {
+          const data = res.nodeOverview;
+          data.forEach((item) => {
+            this.menus.push({
+              id: item.id,
+              name: item.name,
+              prefixIcon: this.filterNodeType(item.type),
+              choose: false,
+              suffixIcon: this.filterNodeStatus(item.state)
+            });
+          });
+        })
+        .catch();
     }
   }
 };

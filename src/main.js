@@ -1,3 +1,4 @@
+import 'babel-polyfill'; // 支持IE执行原生script
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";

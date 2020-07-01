@@ -130,19 +130,21 @@ export default {
   methods: {
     setOption() {
       this.option.title.textStyle.color = this.processColor;
+      this.option.series[0].data[0].itemStyle.normal.color = this.processColor;
       this.option.series[0].data[0].value =
         this.data != undefined ? this.data : 0;
-      this.option.series[0].data[0].itemStyle.normal.color = this.processColor;
       this.option.title.text = this.data != undefined ? this.data + "%" : "--";
     },
     initChart() {
-      this.chart = this.$echarts.init(document.getElementById(this.id));
-      this.chart.setOption(this.option);
+      if (this.data != undefined) {
+        this.chart = this.$echarts.init(document.getElementById(this.id));
+        this.chart.setOption(this.option);
 
-      let _this = this;
-      window.addEventListener("resize", () => {
-        _this.chart.resize();
-      });
+        let _this = this;
+        window.addEventListener("resize", () => {
+          _this.chart.resize();
+        });
+      }
     }
   }
 };

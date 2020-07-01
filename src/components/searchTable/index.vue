@@ -2,7 +2,7 @@
   <div class="table" ref="table">
     <div v-if="selectShow" class="table-search">
       <div>
-        <el-input v-model="searchContent" placeholder="请输入搜索内容"></el-input>
+        <el-input v-model="content" placeholder="请输入搜索内容"></el-input>
         <span class="show-search" @click="handleSearch">
           <i class="iconfont iconicon_stroke_svg_search"></i>
         </span>
@@ -18,12 +18,12 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page.sync="listQuery.pageNo"
+          :current-page.sync="query.pageNo"
           :page-sizes="[10, 20, 30, 50]"
-          :page-size="listQuery.pageSize"
+          :page-size="query.pageSize"
           background
           layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
+          :total="pagetotal"
         ></el-pagination>
       </div>
     </div>
@@ -45,29 +45,48 @@ export default {
     selectShow: {
       type: Boolean,
       default: true
+    },
+    total: {
+      type: Number,
+      required: false
+    }
+  },
+  watch: {
+    total(newVal) {
+      this.pagetotal = newVal;
+    },
+    data(newVal) {
+      this.list = newVal;
     }
   },
   data() {
     return {
-      searchContent: undefined,
-      listQuery: {
+      content: undefined,
+      query: {
         pageNo: 1,
         pageSize: 10,
         sortProp: undefined,
         sortType: undefined
       },
+      pagetotal: undefined,
       maxHeight: 500,
-      list: [],
-      total: 50
+      list: []
     };
   },
   methods: {
-    handleSizeChange() {},
-    handleCurrentChange() {},
-    handleSearch() {}
+    handleSizeChange() {
+      this.$emit("handleSizeChange", this.query);
+    },
+    handleCurrentChange() {
+      this.$emit("handleCurrentChange", this.query);
+    },
+    handleSearch() {
+      this.$emit("handleSearch", this.query, this.content);
+    }
   },
   mounted() {
     this.list = this.data;
+    this.pagetotal = this.total;
     if (this.height != undefined) {
       this.maxHeight = this.height;
     } else {

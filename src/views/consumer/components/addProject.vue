@@ -420,7 +420,7 @@ export default {
       });
     },
     reset() {
-      this.action = 2;
+      this.action = 0;
       this.addProjectForm = {
         projectName: "测试项目",
         email: "1179438473@qq.com",

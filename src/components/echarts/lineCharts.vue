@@ -9,7 +9,7 @@ export default {
     return {
       option: {
         grid: {
-          left: "3%",
+          left: "3.5%",
           right: "3%",
           bottom: "12%"
         },
