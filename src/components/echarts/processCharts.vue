@@ -132,7 +132,7 @@ export default {
       this.option.title.textStyle.color = this.processColor;
       this.option.series[0].data[0].itemStyle.normal.color = this.processColor;
       this.option.series[0].data[0].value =
-        this.data != undefined ? this.data : 0;
+        this.data != 0 ? this.data : 0.1;
       this.option.title.text = this.data != undefined ? this.data + "%" : "--";
     },
     initChart() {

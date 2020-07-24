@@ -1,10 +1,10 @@
 <template>
   <div class="supplier">
     <div>
-      <sideBar :id.sync="deviceId" />
+      <sideBar ref="sideBar" :id.sync="deviceId" />
     </div>
     <div>
-      <supplierMian :id.sync="deviceId" />
+      <supplierMian @handleUpdate="handleUpdate" :id.sync="deviceId" />
     </div>
   </div>
 </template>
@@ -20,6 +20,11 @@ export default {
     return {
       deviceId: "0"
     };
+  },
+  methods: {
+    handleUpdate() {
+      this.$refs.sideBar.getNodes();
+    }
   }
 };
 </script>
@@ -29,6 +34,7 @@ export default {
   background: #272632;
   position: relative;
   height: 100vh;
+  /* min-height: calc(100% - 64px); */
   display: flex;
   flex-direction: row;
 }

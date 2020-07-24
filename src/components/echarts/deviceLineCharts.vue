@@ -40,22 +40,7 @@ export default {
           },
           axisTick: {
             show: false
-          },
-          data: [
-            "6:00",
-            "7:00",
-            "8:00",
-            "9:00",
-            "10:00",
-            "11:00",
-            "12:00",
-            "13:00",
-            "14:00",
-            "15:00",
-            "16:00",
-            "17:00",
-            "18:00"
-          ]
+          }
         },
         yAxis: {
           type: "category",
@@ -127,11 +112,27 @@ export default {
       if (this.data == undefined) {
         this.option.yAxis.type = "category";
         this.option.yAxis.data = [0, 20, 40, 60, 80, 100];
+        this.option.xAxis.data = [
+          "6:00",
+          "7:00",
+          "8:00",
+          "9:00",
+          "10:00",
+          "11:00",
+          "12:00",
+          "13:00",
+          "14:00",
+          "15:00",
+          "16:00",
+          "17:00",
+          "18:00"
+        ];
       } else {
         this.option.yAxis.type = "value";
-        this.option.series[0].data = this.data.cpu;
-        this.option.series[1].data = this.data.store;
-        this.option.series[2].data = this.data.flow;
+        this.option.xAxis.data = this.data.x;
+        this.option.series[0].data = this.data.y.cpuUsages;
+        this.option.series[1].data = this.data.y.diskUsages;
+        this.option.series[2].data = this.data.y.bandwidthUsages;
       }
       this.chart = this.$echarts.init(document.getElementById("deviceLine"));
       this.chart.setOption(this.option);

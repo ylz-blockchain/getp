@@ -28,7 +28,7 @@
         <div v-if="download" class="navbar-private-supplier-download">
           <div>扫描二维码下载移动端</div>
           <div>
-            <img src="@/assets/pay_code.png" />
+            <img :src="installCode" />
           </div>
         </div>
       </div>
@@ -42,6 +42,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { qrcode } from "@/api/supplier/index";
 
 export default {
   name: "navbar",
@@ -49,6 +50,7 @@ export default {
     return {
       indexPath: "/",
       path: undefined,
+      installCode: undefined,
       download: false
     };
   },
@@ -58,6 +60,9 @@ export default {
   mounted() {
     this.indexPath = this.menus[0].children[0].path;
     this.path = this.$route.path;
+  },
+  created() {
+    this.getInstallCode();
   },
   methods: {
     showProfile() {
@@ -74,6 +79,13 @@ export default {
     },
     handleDownload() {
       this.download = this.download ? false : true;
+    },
+    getInstallCode() {
+      qrcode('http://192.168.0.102:88/app/get_0.0.1_20200711.apk')
+        .then(res => {
+          this.installCode = res;
+        })
+        .catch();;
     }
   }
 };
@@ -156,7 +168,7 @@ export default {
 
 .navbar-private-supplier-download > div:last-child {
   border: 1px solid #00ff87;
-  padding: 5px 5px 5px 5px;
+  padding: 9px 5px 5px 6px;
   width: 125px;
   margin: 30px;
   margin-top: 20px;

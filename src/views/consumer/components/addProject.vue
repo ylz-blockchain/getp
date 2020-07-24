@@ -156,7 +156,11 @@
           <el-form-item prop="calculate" class="add-project-config-item">
             <div>运算时长：</div>
             <div>
-              <el-input v-model="addProjectForm.calculate" placeholder="请输入运算时长（单位/天）" />
+              <el-input
+                @change="handlePriceChange"
+                v-model="addProjectForm.calculate"
+                placeholder="请输入运算时长（单位/天）"
+              />
             </div>
           </el-form-item>
 
@@ -187,6 +191,7 @@ import { randomImage } from "@/api/admin/user";
 import { validateEmail } from "@/utils/validate";
 import pay from "@/views/pay";
 import { checkCaptcha } from "@/api/admin/user";
+import { queryBalance, create } from "@/api/consumer/index";
 
 export default {
   name: "add-project",
@@ -208,41 +213,97 @@ export default {
         projectFile: undefined,
         verifyCode: undefined,
         projectPrice: 0,
-        memory: "32G",
-        cpu: "2.8GHz 四核",
-        store: "27G",
-        gpu: "无",
+        memory: 16,
+        cpu: 3,
+        store: 4.8,
+        gpu: 128,
         calculate: undefined
       },
       memoryOptions: [
         {
-          value: 100,
+          value: 16,
+          label: "16G"
+        },
+        {
+          value: 32,
           label: "32G"
+        },
+        {
+          value: 64,
+          label: "64G"
+        },
+        {
+          value: 128,
+          label: "128G"
+        },
+        {
+          value: 256,
+          label: "256G"
         }
       ],
       cpuOptions: [
         {
-          value: 100,
-          label: "2.8GHz 四核"
+          value: 3,
+          label: "2核"
         },
         {
-          value: 120,
-          label: "2.9GHz 四核"
+          value: 10,
+          label: "4核"
+        },
+        {
+          value: 30,
+          label: "8核"
+        },
+        {
+          value: 80,
+          label: "16核"
         }
       ],
       storeOptions: [
         {
-          value: 300,
-          label: "27G"
+          value: 4.8,
+          label: "16G"
+        },
+        {
+          value: 9.6,
+          label: "32G"
+        },
+        {
+          value: 19.2,
+          label: "64G"
+        },
+        {
+          value: 38.4,
+          label: "128G"
+        },
+        {
+          value: 76.8,
+          label: "256G"
         }
       ],
       gpuOptions: [
         {
-          value: 200,
-          label: "无"
+          value: 128,
+          label: "16G"
+        },
+        {
+          value: 256,
+          label: "32G"
+        },
+        {
+          value: 512,
+          label: "64G"
+        },
+        {
+          value: 1024,
+          label: "128G"
+        },
+        {
+          value: 2048,
+          label: "256G"
         }
       ],
-      userPrice: 2000,
+      userPrice: 0,
       uploadProcess: 0,
       verifyCodeImage: undefined,
       verifyCodeTime: undefined,
@@ -291,6 +352,9 @@ export default {
       this.drawer = newVal;
       this.reset();
     }
+  },
+  created() {
+    this.getUserBalance();
   },
   methods: {
     handleClose() {
@@ -344,11 +408,19 @@ export default {
     handlePay() {
       this.payVisible = true;
     },
+    getUserBalance() {
+      queryBalance()
+        .then(res => {
+          this.userPrice = res;
+        })
+        .catch();
+    },
     handleUploadTask() {
       this.$refs.addProjectForm.validate((valid, field) => {
         if (valid) {
           if (!this.addProjectForm.projectFile) {
             message("请选择需要上传的文件", "error");
+            return;
           }
 
           let validCodeParam = {
@@ -374,12 +446,11 @@ export default {
                     ((progressEvent.loaded / progressEvent.total) * 100) | 0;
 
                   _this.uploadProcess = complete;
-                  if (_this.uploadProcess == 100) {
-                    _this.action = 2;
-                  }
                 }
               })
-                .then(res => {})
+                .then(res => {
+                  _this.action = 2;
+                })
                 .catch(err => {});
             })
             .catch();
@@ -397,16 +468,38 @@ export default {
     },
     handleParamChange() {
       this.addProjectForm.projectPrice =
-        this.addProjectForm.memory +
-        this.addProjectForm.cpu +
-        this.addProjectForm.store +
-        this.addProjectForm.gpu;
+        Math.round(
+          this.addProjectForm.calculate *
+            (this.addProjectForm.memory +
+              this.addProjectForm.cpu +
+              this.addProjectForm.store +
+              this.addProjectForm.gpu) *
+            100
+        ) / 100;
     },
     createProject() {
       this.$refs.addProjectForm.validate((valid, field) => {
         if (valid) {
-          this.$emit("handleSuccess");
-          this.handleClose();
+          let param = {
+            cpu: this.addProjectForm.cpu,
+            email: this.addProjectForm.email,
+            gpu: this.addProjectForm.gpu,
+            memory: this.addProjectForm.memory,
+            name: this.addProjectForm.projectName,
+            origin: "/opt/xxx.zip",
+            price: this.addProjectForm.projectPrice,
+            runTime: this.addProjectForm.calculate,
+            storage: this.addProjectForm.store
+          };
+
+          create(param)
+            .then(res => {
+              this.$emit("handleSuccess");
+              this.handleClose();
+            })
+            .catch(error => {
+              this.action = 0;
+            });
         } else {
           let errorMessage = "";
           for (let item in field) {
@@ -419,6 +512,9 @@ export default {
         }
       });
     },
+    handlePriceChange() {
+      this.handleParamChange();
+    },
     reset() {
       this.action = 0;
       this.addProjectForm = {
@@ -427,10 +523,10 @@ export default {
         projectFile: undefined,
         verifyCode: undefined,
         projectPrice: 0,
-        memory: "32G",
-        cpu: "2.8GHz 四核",
-        store: "27G",
-        gpu: "无",
+        memory: 16,
+        cpu: 3,
+        store: 4.8,
+        gpu: 128,
         calculate: undefined
       };
       this.uploadProcess = 0;

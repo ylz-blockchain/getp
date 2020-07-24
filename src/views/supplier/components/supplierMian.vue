@@ -48,20 +48,20 @@
             <span v-html="filterTitleStyle(deviceInfo.status)"></span>
           </span>
 
-          <template v-if="deviceInfo.status == 0">
+          <template v-if="deviceInfo.status == 1">
             <span class="supplier-main-device-top-button1 pause">
-              <cover-button>暂停工作</cover-button>
+              <cover-button @click.native="handleStop">暂停工作</cover-button>
             </span>
           </template>
 
-          <template v-if="deviceInfo.status == 1">
+          <template v-if="deviceInfo.status == 0">
             <span class="supplier-main-device-top-button1 run">
-              <cover-button>开始工作</cover-button>
+              <cover-button @click.native="handleStart">开始工作</cover-button>
             </span>
           </template>
 
           <span class="supplier-main-device-top-button2 delete">
-            <cover-button>删除节点</cover-button>
+            <cover-button @click.native="handleDelete">删除节点</cover-button>
           </span>
         </div>
         <div>积分 {{ deviceInfo.score }}</div>
@@ -125,7 +125,14 @@ import lineCharts from "@/components/echarts/lineCharts";
 import deviceLineCharts from "@/components/echarts/deviceLineCharts";
 import searchTable from "@/components/searchTable";
 import coverButton from "@/components/button";
-import { overview, tasks, nodeDetail } from "@/api/supplier/index";
+import {
+  overview,
+  tasks,
+  nodeDetail,
+  run,
+  stop,
+  delNode
+} from "@/api/supplier/index";
 
 export default {
   name: "supplier-main",
@@ -159,11 +166,7 @@ export default {
         cpuProcess: undefined,
         storeProcess: undefined,
         flowProcess: undefined,
-        runData: {
-          cpu: [80, 60, 40, 60, 50, 90, 40, 80, 60, 40, 60, 50, 90],
-          store: [12, 32, 20, 43, 50, 34, 30, 42, 60, 40, 61, 50, 60],
-          flow: [40, 60, 60, 32, 20, 61, 70, 89, 67, 74, 42, 42, 42]
-        }
+        runData: undefined
       },
       listQuery: {
         pageNo: 1,
@@ -187,13 +190,13 @@ export default {
     filterTitleStyle(status) {
       switch (status) {
         case 0:
-          return "<span class='run'>（运行中）</span>";
-        case 1:
           return "<span class='pause'>（空闲）</span>";
+        case 1:
+          return "<span class='run'>（运行中）</span>";
         case 2:
           return "<span class='delete'>（错误，请检查设备！）</span>";
         default:
-          return "";
+          return "<span class='delete'>（错误，请检查设备！）</span>";
       }
     },
     filterStatus(val) {
@@ -210,7 +213,7 @@ export default {
       }
     },
     filterNodeType(val) {
-      switch(val) {
+      switch (val) {
         case 0:
           return "iconfont iconicon_stroke_svg_pc";
         case 1:
@@ -255,16 +258,36 @@ export default {
         .catch();
     },
     getNodeDetail() {
+      if (this.deviceInfo.id == "0") {
+        return;
+      }
+
       nodeDetail({ uniqueId: this.deviceInfo.id })
         .then(res => {
-          const { name, state, cpuUsage, diskUsed, memUsed, currentIntegral, bandwidthUsed, type } = res;
+          const {
+            name,
+            state,
+            cpuUsage,
+            diskUsed,
+            memUsed,
+            currentIntegral,
+            bandwidthUsed,
+            type,
+            records,
+            x,
+            y
+          } = res;
           this.deviceInfo.name = name;
           this.deviceInfo.status = state;
           this.deviceInfo.score = currentIntegral;
           this.deviceInfo.cpuProcess = cpuUsage;
           this.deviceInfo.storeProcess = diskUsed;
           this.deviceInfo.flowProcess = bandwidthUsed;
-          this.deviceInfo.icon = this.filterNodeType(type)
+          this.deviceInfo.icon = this.filterNodeType(type);
+          this.deviceInfo.runData = {
+            x: x,
+            y: y
+          };
         })
         .catch();
     },
@@ -280,6 +303,34 @@ export default {
     handleCurrentChange(param) {
       this.listQuery = param[0];
       this.getRecords();
+    },
+    handleStart() {
+      // 开始任务
+      run(this.deviceInfo.id)
+        .then(res => {
+          this.getNodeDetail();
+          this.$emit("handleUpdate");
+        })
+        .catch();
+    },
+    handleStop() {
+      stop(this.deviceInfo.id)
+        .then(res => {
+          this.getNodeDetail();
+          this.$emit("handleUpdate");
+        })
+        .catch();
+    },
+    handleDelete() {
+      // delNode(this.deviceInfo.id)
+      //   .then(res => {
+      //     this.deviceInfo.id = '0';
+      //     this.$emit("update:id", '0');
+      //     this.getOverview();
+      //     this.getRecords();
+      //     this.$emit("handleUpdate");
+      //   })
+      //   .catch();
     }
   }
 };

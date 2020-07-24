@@ -272,6 +272,7 @@ export default {
             })
             .catch(() => {
               message("注册失败", "error");
+              this.validCodeAble = false;
             });
         } else {
           let errorMessage = "";

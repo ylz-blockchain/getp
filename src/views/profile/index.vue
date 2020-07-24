@@ -45,7 +45,7 @@
           <div class="profile-content">
             <div class="profile-content-title">
               <div>余额</div>
-              <div class="profile-value">¥2000</div>
+              <div class="profile-value">¥{{ userInfo.balance }}</div>
             </div>
             <div class="profile-content-click">
               <span @click="handlePay">充值</span>
@@ -59,26 +59,11 @@
           <div class="profile-content">
             <div>消费记录</div>
             <div class="profile-wallet-balance-record">
-              <div class="profile-wallet-balance-record-item">
-                <div>¥132</div>
-                <div>2020.06.01.18:32</div>
-                <div></div>
-              </div>
-              <div class="profile-wallet-balance-record-item">
-                <div>¥132</div>
-                <div>2020.06.01.18:32</div>
-                <div></div>
-              </div>
-              <div class="profile-wallet-balance-record-item">
-                <div>¥132</div>
-                <div>2020.06.01.18:32</div>
-                <div></div>
-              </div>
-              <div class="profile-wallet-balance-record-item">
-                <div>¥132</div>
-                <div>2020.06.01.18:32</div>
+              <div v-for="(item, index) in userInfo.balanceRecords" :key="index" class="profile-wallet-balance-record-item">
+                <div>{{ item.amount }}</div>
+                <div>{{ item.buyDate }}</div>
                 <div class="profile-content-click">
-                  <span @click="handleConsumeRecord">查看详情</span>
+                  <span v-if="index === userInfo.balanceRecords.length - 1" @click="handleConsumeRecord">查看详情</span>
                 </div>
               </div>
 
@@ -105,7 +90,11 @@
           <div>运行时间</div>
           <div>历史收益</div>
         </div>
-        <div v-for="( item, index ) in userInfo.rateRecords" :key="index" class="profile-wallet-rate-item">
+        <div
+          v-for="( item, index ) in userInfo.rateRecords"
+          :key="index"
+          class="profile-wallet-rate-item"
+        >
           <div></div>
           <div>{{ item.name }}</div>
           <div>{{ item.diffDays }}天</div>
@@ -139,7 +128,7 @@
             </div>
           </div>
 
-          <change-password :visible.sync="changePasswordVisible" />
+          <change-password :phone="userInfo.phone" :visible.sync="changePasswordVisible" />
         </div>
       </div>
 
@@ -160,7 +149,7 @@ import changePassword from "./components/changePassword";
 import { message } from "@/utils/utils";
 import { mapGetters } from "vuex";
 import { changeUserInfo } from "@/api/admin/user";
-import { supplierCenter } from "@/api/supplier/index";
+import { center } from "@/api/index/index";
 
 export default {
   name: "profile",
@@ -183,8 +172,10 @@ export default {
         username: "乌班鱼",
         total: 0,
         current: 0,
+        balance: 0,
         roleType: "consumer",
-        phone: '',
+        phone: "",
+        balanceRecords: [],
         rateRecords: []
       },
       payVisible: false,
@@ -196,10 +187,7 @@ export default {
   created() {
     this.userInfo.roleType = this.role;
     this.userInfo.username = this.user;
-    if (this.userInfo.roleType == "consumer") {
-    } else {
-      this.getSupplierInfo();
-    }
+    this.getCenter();
   },
   watch: {
     visible(newVal) {
@@ -207,14 +195,21 @@ export default {
     }
   },
   methods: {
-    getSupplierInfo() {
-      supplierCenter()
+    getCenter() {
+      center()
         .then(res => {
-          const { phone, total, current, historyRecords } = res;
+          const { phone, total, current } = res;
           this.userInfo.total = total;
           this.userInfo.phone = phone;
           this.userInfo.current = current;
-          this.userInfo.rateRecords = historyRecords;
+          if (this.userInfo.roleType == "consumer") {
+            const { balance, accountRecords } = res;
+            this.userInfo.balance = balance;
+            this.userInfo.balanceRecords = accountRecords;
+          } else {
+            const { historyRecords } = res;
+            this.userInfo.rateRecords = historyRecords;
+          }
         })
         .catch();
     },
@@ -288,10 +283,11 @@ export default {
   margin-left: 5%;
   color: #ffffff;
   margin-right: 5%;
+  overflow: auto;
 }
 
 .profile {
-  height: 100%;
+  height: 800px;
 }
 
 .profile > div {
@@ -443,8 +439,15 @@ export default {
   width: 100%;
 }
 
+.profile-wallet-balance-record-item > div:nth-child(2) {
+  flex: 1;
+}
+
+.profile-wallet-balance-record-item > div:not(:nth-child(2)) {
+  flex: 0.5;
+}
+
 .profile-wallet-balance-record-item > div {
-  width: 50px;
   margin-bottom: 20px;
 }
 

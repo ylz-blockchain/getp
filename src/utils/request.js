@@ -42,7 +42,13 @@ service.interceptors.response.use(
     const res = response.data.result;
     if (!response.data.success) {
       message(response.data.message, "error")
-      return Promise.reject('error');
+      if (!response.data.code === "401") {
+        store.dispatch('LogOut').then(() => {
+          location.reload(); // 为了重新实例化vue-router对象 避免bug
+        });
+      } else {
+        return Promise.reject('error');
+      }
     } else {
       return res;
     }

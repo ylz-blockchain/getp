@@ -86,6 +86,10 @@ export default {
     visible: {
       type: Boolean,
       default: false
+    },
+    phone: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -127,6 +131,9 @@ export default {
     visible(newVal) {
       this.changePasswordVisible = newVal;
     }
+  },
+  mounted() {
+    this.changeForm.phoneNumber = this.phone;
   },
   methods: {
     handleClose() {
@@ -200,7 +207,7 @@ export default {
           changePassword(param)
             .then(response => {
               message("重置密码成功", "success");
-              this.login();
+              this.handleClose();
             })
             .catch(() => {
               message("重置密码失败", "error");

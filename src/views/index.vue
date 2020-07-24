@@ -73,7 +73,7 @@
           <div class="index-bottom-item">
             <img src="@/assets/icon_stroke_svg_country.png" />
             <span>国家和地区</span>
-            <span>200</span>
+            <span>{{ countInfo.region }}</span>
           </div>
         </li>
         <li>
@@ -81,7 +81,7 @@
           <div class="index-bottom-item">
             <img src="@/assets/icon_stroke_svg_node.png" />
             <span>节点</span>
-            <span>23141W</span>
+            <span>{{ countInfo.nodeSize }}</span>
           </div>
         </li>
         <li>
@@ -89,7 +89,7 @@
           <div class="index-bottom-item">
             <img src="@/assets/icon_stroke_svg_cpu.png" />
             <span>cpu</span>
-            <span>213152P</span>
+            <span>{{ countInfo.cpu }}</span>
           </div>
         </li>
         <li>
@@ -97,7 +97,7 @@
           <div class="index-bottom-item">
             <img src="@/assets/icon_stroke_svg_memory.png" />
             <span>内存</span>
-            <span>213152P</span>
+            <span>{{ countInfo.mem }}</span>
           </div>
         </li>
       </ul>
@@ -107,6 +107,7 @@
 
 <script>
 import indexMapCharts from "@/components/echarts/indexMapCharts";
+import { info } from "@/api/index/index";
 
 let defalutConsumerIcon = require("@/assets/icon_stroke_svg_hot.png");
 let upConsumerIcon = require("@/assets/icon_stroke_svg_hotup.png");
@@ -810,10 +811,17 @@ export default {
           },
           name: "钱七"
         }
-      ]
+      ],
+      countInfo: {
+        nodeSize: 0,
+        mem: 0,
+        cpu: 0,
+        region: 0
+      }
     };
   },
   created() {
+    this.getInfo();
     this.loadConsumerList();
   },
   mounted() {
@@ -926,6 +934,14 @@ export default {
     }
   },
   methods: {
+    getInfo() {
+      info()
+        .then(res => {
+          const { nodeSize, mem, cpu, region } = res;
+          this.countInfo = { nodeSize, mem, cpu, region };
+        })
+        .catch();
+    },
     loadConsumerList() {
       for (let i = 0; i < 25; i++) {
         this.consumerUsers.push({

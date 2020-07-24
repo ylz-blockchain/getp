@@ -46,15 +46,7 @@ export default {
   data() {
     return {
       addVisible: false,
-      menus: [
-        {
-          id: "0",
-          prefixIcon: "iconfont iconicon_stroke_svg_overview",
-          name: "概览",
-          choose: true,
-          suffixIcon: ""
-        }
-      ]
+      menus: []
     };
   },
   created() {
@@ -75,7 +67,7 @@ export default {
       this.addVisible = true;
     },
     filterNodeType(val) {
-      switch(val) {
+      switch (val) {
         case 0:
           return "iconfont iconicon_stroke_svg_pc";
         case 1:
@@ -88,8 +80,9 @@ export default {
           return "iconfont iconicon_stroke_svg_devide";
       }
     },
-    filterNodeStatus(val) { // 节点状态 -> 0: 空闲中, 1: 运行中, 2: 已停止
-      switch(val) {
+    filterNodeStatus(val) {
+      // 节点状态 -> 0: 空闲中, 1: 运行中, 2: 已停止
+      switch (val) {
         case 0:
           return "iconfont iconicon_stroke_svg_free";
         case 1:
@@ -104,12 +97,21 @@ export default {
       nodes()
         .then(res => {
           const data = res.nodeOverview;
-          data.forEach((item) => {
+          this.menus = [
+            {
+              id: "0",
+              prefixIcon: "iconfont iconicon_stroke_svg_overview",
+              name: "概览",
+              choose: this.id == "0",
+              suffixIcon: ""
+            }
+          ];
+          data.forEach(item => {
             this.menus.push({
               id: item.id,
               name: item.name,
               prefixIcon: this.filterNodeType(item.type),
-              choose: false,
+              choose: item.id == this.id,
               suffixIcon: this.filterNodeStatus(item.state)
             });
           });

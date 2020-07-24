@@ -37,20 +37,28 @@
 
     <!-- 表格 -->
     <div class="project-table">
-      <search-table :selectShow="false" :data="projectRecord">
-        <el-table-column prop="projectName" label="项目名称"></el-table-column>
+      <search-table
+        :total.sync="total"
+        @handleSizeChange="handleSizeChange(arguments)"
+        @handleCurrentChange="handleCurrentChange(arguments)"
+        :selectShow="false"
+        :data="projectRecord"
+      >
+        <el-table-column prop="name" label="项目名称"></el-table-column>
         <el-table-column prop="startTime" align="center" label="起始时间"></el-table-column>
-        <el-table-column prop="taskProcess" align="center" label="任务进度">
+        <el-table-column prop="progress" align="center" label="任务进度">
           <template slot-scope="scope">
-            <el-progress :percentage="scope.row.taskProcess" status="success"></el-progress>
+            <el-progress :percentage="scope.row.progress" status="success"></el-progress>
           </template>
         </el-table-column>
-        <el-table-column prop="taskStatus" align="center" label="任务状态">
+        <el-table-column prop="progress" align="center" label="任务状态">
           <template slot-scope="scope">
-            <span v-html="filterStatus(scope.row.taskStatus)"></span>
+            <span v-html="filterStatus(scope.row.progress)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="time" align="center" label="耗时"></el-table-column>
+        <el-table-column prop="diffDays" align="center" label="耗时">
+          <template slot-scope="scope">{{ scope.row.diffDays }} 天</template>
+        </el-table-column>
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
             <el-button
@@ -72,6 +80,7 @@ import coverButton from "@/components/button";
 import { message } from "@/utils/utils";
 import addProject from "./components/addProject";
 import searchTable from "@/components/searchTable";
+import { tasksByUser } from "@/api/consumer/index";
 
 export default {
   name: "project-manager",
@@ -80,47 +89,67 @@ export default {
     return {
       searchContent: undefined,
       listQuery: {
+        pageNo: 1,
+        pageSize: 10,
         filterCheck: [0, 1, 2]
       },
+      total: undefined,
       addProjectVisible: false,
       addMessageVisible: 0,
-      projectRecord: [
-        {
-          projectName: "土地利用分析",
-          startTime: "2020.03.22",
-          taskProcess: 100,
-          taskStatus: 0, // 0 停止 1 运行中 2 已完成
-          time: "43天"
-        },
-        {
-          projectName: "湖南省辣椒消耗量评估",
-          startTime: "2020.03.22",
-          taskProcess: 20,
-          taskStatus: 1, // 0 停止 1 运行中 2 已完成
-          time: "43天"
-        },
-        {
-          projectName: "全球海平面近十年变化分析",
-          startTime: "2020.03.22",
-          taskProcess: 80,
-          taskStatus: 1, // 0 停止 1 运行中 2 已完成
-          time: "43天"
-        },
-        {
-          projectName: "北京市风沙治理近二十年效果分析与检测",
-          startTime: "2020.03.22",
-          taskProcess: 60,
-          taskStatus: 2, // 0 停止 1 运行中 2 已完成
-          time: "43天"
-        }
-      ]
+      projectRecord: []
     };
   },
+  created() {
+    this.getTasks();
+  },
   methods: {
-    handleSearch() {},
-    handleFilterChange() {},
-    handleSizeChange() {},
-    handleCurrentChange() {},
+    getTasks() {
+      let filter = "";
+      this.listQuery.filterCheck.forEach(item => {
+        switch (item) {
+          case 0:
+            filter += "&progress=" + 1;
+            break;
+          case 1:
+            filter += "&progress=" + 0;
+            break;
+          case 2:
+            filter += "&progress=" + 2;
+            break;
+          default:
+            break;
+        }
+      });
+
+      tasksByUser(
+        "name=" +
+          (this.searchContent === undefined ? "" : this.searchContent) +
+          "&pageNo=" +
+          this.listQuery.pageNo +
+          "&pageSize=" +
+          this.listQuery.pageSize +
+          filter
+      )
+        .then(res => {
+          this.projectRecord = res.tasks;
+          this.total = res.total;
+        })
+        .catch();
+    },
+    handleSearch(val) {
+      this.getTasks();
+    },
+    handleFilterChange() {
+      this.getTasks();
+    },
+    handleSizeChange() {
+      this.listQuery = param[0];
+      this.getTasks();
+    },
+    handleCurrentChange() {
+      this.listQuery = param[0];
+      this.getTasks();
+    },
     handleOperation() {},
     handleAddProject() {
       this.addProjectVisible = true;
@@ -145,7 +174,7 @@ export default {
       }
     },
     filterButtonClass(row) {
-      switch (row.taskStatus) {
+      switch (row.progress) {
         case 0:
           return "success";
         case 1:
@@ -157,7 +186,7 @@ export default {
       }
     },
     filterOperation(row) {
-      switch (row.taskStatus) {
+      switch (row.progress) {
         case 0:
           return "继续运算";
         case 1:

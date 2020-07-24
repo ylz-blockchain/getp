@@ -55,6 +55,7 @@
 
 <script>
 import { message } from "@/utils/utils";
+import { addNode } from "@/api/supplier/index";
 
 export default {
   name: "add-project",
@@ -74,6 +75,10 @@ export default {
   watch: {
     visible(newVal) {
       this.adddVisible = newVal;
+      if (newVal) {
+        this.installCode = undefined;
+        this.active = 0;
+      }
     }
   },
   methods: {
@@ -82,7 +87,22 @@ export default {
       this.$emit("update:visible", false);
     },
     handleNext(step) {
-      this.active = step;
+      if (step == 1) {
+        if (this.installCode != undefined && this.installCode != "") {
+          this.active = step;
+          addNode(this.installCode)
+            .then(res => {
+              this.active = 2;
+            })
+            .catch(error => {
+              this.active = 3;
+            });
+        } else {
+          message("请输入安装码", "error");
+        }
+      } else {
+        this.active = step;
+      }
     }
   }
 };
